@@ -1,8 +1,4 @@
-const fullName = require('./utils');
-const notes = require('./notes');
+const validator = require('validator');
 
-// fullName('Eduardo', 'Cardoso');
-
-// Challenge 02 : Define and use a function in a new file
-
-console.log(notes());
+console.log(validator.isEmail('edu@edu.com.br'));
+console.log(validator.isURL('edu.com.br'));
