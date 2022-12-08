@@ -1,4 +1,5 @@
-const validator = require('validator');
+const chalk = require('chalk');
 
-console.log(validator.isEmail('edu@edu.com.br'));
-console.log(validator.isURL('edu.com.br'));
+const msg = chalk.green('Success!');
+
+console.log(msg);
