@@ -1,7 +1,8 @@
-const fs = require('fs');
+const fullName = require('./utils');
+const notes = require('./notes');
 
-fs.writeFileSync('note.txt', 'Ola, meu nome é Eduardo e tenho 21 anos.');
+// fullName('Eduardo', 'Cardoso');
 
-// Challenge 01 : Append a message to notes.txt
+// Challenge 02 : Define and use a function in a new file
 
-fs.appendFileSync('note.txt', ' E estou aprendendo NodeJs.');
+console.log(notes());
