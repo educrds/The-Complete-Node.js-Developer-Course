@@ -1,11 +1,6 @@
-const request = require('request');
-const chalk = require('chalk')
+const geocode = require('./utils/geocode');
+const forecast = require('./utils/forescast');
 
-const apiKey = '524be49095a00669fc39e4eb593c2750';
-const apiURL = `http://api.weatherstack.com/current?access_key=${apiKey}&query=37.8267,-122.4233&units=m`;
+geocode('Sao paulo', (error, data) => console.log(data));
 
-request({url:apiURL, json:true}, (error, response) => {
-  const data = response.body.current;
-  console.log(chalk.green(`It is currently ${data.temperature} degrees out. It feels like ${data.feelslike} degrees out.`));
-});
- 
+forecast(-46.6334, -23.5507, (error, data) => console.log(data));
