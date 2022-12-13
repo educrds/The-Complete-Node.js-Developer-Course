@@ -1,13 +1,11 @@
 const express = require('express');
+const path = require('path');
 const port = 5050;
 
 const app = express();
+const publicDir = path.join(__dirname, '../public');
 
-app.get('/', (req, res) => res.send('Hello express!'));
-
-app.get('/help', (req, res) => res.send('Need help?'));
-
-app.get('/about', (req, res) => res.send('About us'));
+app.use(express.static(publicDir))
 
 app.get('/weather', (req, res) => res.send('Weather today is...'));
 
