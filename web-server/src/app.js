@@ -1,6 +1,9 @@
 const express = require('express');
+const geocode = require('./utils/geocode');
+const forecast = require('./utils/forescast');
 const path = require('path');
 const hbs = require('hbs');
+
 const port = 5050;
 
 const app = express();
@@ -41,22 +44,49 @@ app.get('/help', (req, res) => {
   });
 });
 
-app.get('/weather', (req, res) => res.send('Weather today is...'));
+app.get('/weather', (req, res) => {
+  const address = req.query.address;
+
+  if (!address) {
+    return res.send({
+      error: 'You must provide a correct address!',
+    });
+  }
+
+  geocode(address, (error, { longitude, latitude, location } = {}) => {
+    if (error)
+      return res.send({
+        error,
+      });
+
+    forecast(longitude, latitude, (error, forecastData) => {
+      if (error)
+        return res.send({
+          error,
+        });
+
+      res.send({
+        location: location,
+        forecast: forecastData,
+      });
+    });
+  });
+});
 
 // 404 route
 app.get('/help/*', (req, res) => {
   res.render('404', {
-    title:'404',
+    title: '404',
     error: 'Article not found',
-    name:'Eduardo'
+    name: 'Eduardo',
   });
 });
 
 app.get('*', (req, res) => {
   res.render('404', {
-    title:'404',
+    title: '404',
     error: 'Page not found',
-    name:'Eduardo'
+    name: 'Eduardo',
   });
 });
 
