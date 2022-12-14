@@ -4,9 +4,9 @@ const forecast = require('./utils/forescast');
 const path = require('path');
 const hbs = require('hbs');
 
-const port = 5050;
 
 const app = express();
+const port = process.env.PORT || 5050;
 
 // define paths for express config
 const publicDir = path.join(__dirname, '../public');
@@ -25,21 +25,21 @@ app.use(express.static(publicDir));
 app.get('', (req, res) =>
   res.render('index', {
     title: 'Weather',
-    name: 'Eduardo',
+    name: 'Eduardo Cardoso',
   })
 );
 
 app.get('/about', (req, res) => {
   res.render('about', {
     title: 'About me',
-    name: 'Eduardo',
+    name: 'Eduardo Cardoso',
   });
 });
 
 app.get('/help', (req, res) => {
   res.render('help', {
     title: 'Need help?',
-    name: 'Eduardo',
+    name: 'Eduardo Cardoso',
     call: 'Call me: (321) 8909-09888',
   });
 });

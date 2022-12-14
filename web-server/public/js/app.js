@@ -1,5 +1,3 @@
-console.log('Client side JS file is loaded');
-
 const weatherForm = document.querySelector('form');
 const search = document.querySelector('input');
 
@@ -11,7 +9,7 @@ weatherForm.addEventListener('submit', handleSubmit);
 function handleSubmit(e) {
   e.preventDefault();
   const location = search.value;
-  const urlAPI = `http://localhost:5050/weather?address=${location}`;
+  const urlAPI = `/weather?address=${location}`;
 
   fetch(urlAPI)
     .then((response) => response.json())
