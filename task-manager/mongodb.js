@@ -18,26 +18,28 @@ MongoClient.connect(
     // Creating db_tasks
     const db = client.db(databaseName);
 
-    // CREATE - Inserting one object into the users collection
-
     // db.collection('users')
-    //   .insertOne({ name: 'Vikram', age: 70 })
+    //   .findOne({ _id: '639b64f3ed15193646df64b0' })
     //   .then((result, error) => {
     //     if (error) return console.log('Unable to insert document');
     //     console.log(result);
     //   });
 
-    // CREATE - Inserting many objects into the users collection
+    // READ - Find document with condition
+    db.collection('tasks')
+      .find({ completed: false })
+      .toArray()
+      .then((result, error) => {
+        if (error) return console.log('Unable to find documents');
+        console.log(result);
+      });
 
-    // db.collection('tasks')
-    //   .insertMany([
-    //     { description: 'start studying Node', completed: true },
-    //     { description: 'start studying React', completed: false },
-    //     { description: 'start studying English again', completed: false },
-    //   ])
+    // READ - Count documents with condition
+    // db.collection('users')
+    //   .countDocuments({ age: 32 })
     //   .then((result, error) => {
-    //     if (error) return console.log('Unable to insert document');
-    //     console.log(result.insertedIds);
+    //     if (error) return console.log('Unable to find documents');
+    //     console.log(result);
     //   });
   }
 );
