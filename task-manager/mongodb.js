@@ -18,18 +18,9 @@ MongoClient.connect(
     // Creating db_tasks
     const db = client.db(databaseName);
 
-    // UPDATE - updating a task
-    db.collection('tasks')
-      .updateMany(
-        {
-          completed: false,
-        },
-        {
-          $set: {
-            completed: true,
-          },
-        }
-      )
+    // DELETE - deleting a user
+    db.collection('users')
+      .deleteOne({ name: 'Vikram' })
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
   }
