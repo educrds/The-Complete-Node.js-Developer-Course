@@ -18,28 +18,19 @@ MongoClient.connect(
     // Creating db_tasks
     const db = client.db(databaseName);
 
-    // db.collection('users')
-    //   .findOne({ _id: '639b64f3ed15193646df64b0' })
-    //   .then((result, error) => {
-    //     if (error) return console.log('Unable to insert document');
-    //     console.log(result);
-    //   });
-
-    // READ - Find document with condition
+    // UPDATE - updating a task
     db.collection('tasks')
-      .find({ completed: false })
-      .toArray()
-      .then((result, error) => {
-        if (error) return console.log('Unable to find documents');
-        console.log(result);
-      });
-
-    // READ - Count documents with condition
-    // db.collection('users')
-    //   .countDocuments({ age: 32 })
-    //   .then((result, error) => {
-    //     if (error) return console.log('Unable to find documents');
-    //     console.log(result);
-    //   });
+      .updateMany(
+        {
+          completed: false,
+        },
+        {
+          $set: {
+            completed: true,
+          },
+        }
+      )
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   }
 );
