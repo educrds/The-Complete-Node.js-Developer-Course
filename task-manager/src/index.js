@@ -8,28 +8,45 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
-// passing User data by POST, fetching the data and adding to the DB
+// Passing User data by POST, fetching the data and adding to the DB
 app.post('/users', (req, res) => {
   const user = new User(req.body);
   user
     .save()
     .then(() => res.status(201).send(user))
-    .catch((e) => {
-      // change response status
-      res.status(400).send(e.message);
-    });
+    // change response status
+    .catch((e) => res.status(400).send(e.message));
 });
 
-// passing Task data by POST, fetching the data and adding to the DB
+// Reading Users
+app.get('/users', (req, res) => {
+  User.find({})
+    .then((users) => res.status(200).send(users))
+    .catch((e) => res.status(400).send(e.message));
+});
+
+// Reading unique User by ID
+app.get('/users/:id', (req, res) => {
+  const _id = req.params.id;
+
+  User.findById(_id)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send();
+      }
+      res.send(user);
+    })
+    .catch((e) => res.status(500).send());
+});
+
+// Passing Task data by POST, fetching the data and adding to the DB
 app.post('/tasks', (req, res) => {
   const task = new Task(req.body);
   task
     .save()
     .then(() => res.status(201).send(task))
-    .catch((e) => {
-      // change response status
-      res.status(400).send(e.message);
-    });
+    // change response status if error
+    .catch((e) => res.status(400).send(e.message));
 });
 
 // listening server port
