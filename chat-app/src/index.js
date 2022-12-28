@@ -17,10 +17,16 @@ app.use(express.static(publicDir));
 io.on('connection', (socket) => {
   // Alert when new user joined the session
 
-  socket.emit('message', generateMessage('Welcome'));
-  socket.broadcast.emit('message', generateMessage('A new user has joined'));
+  socket.on('join', ({ username, room }) => {
+    socket.join(room);
 
-  // ------- Message
+    socket.emit('message', generateMessage('Welcome'));
+    socket.broadcast
+      .to(room)
+      .emit('message', generateMessage(`${username} has joined!`));
+  });
+
+  //  Message
 
   socket.on('sendMessage', (message, callback) => {
     const filter = new Filter();
@@ -29,15 +35,18 @@ io.on('connection', (socket) => {
       return callback('Profanity is not allowed!');
     }
 
-    io.emit('message', generateMessage(message));
+    io.to().emit('message', generateMessage(message));
     callback();
   });
-  // ------- Location
+
+  //  Location
 
   socket.on('sendLocation', (coords, callback) => {
     io.emit(
       'locationMessage',
-      generateLocationMessage(`https://google.com/maps?q=${coords.latitude},${coords.longitude}`)
+      generateLocationMessage(
+        `https://google.com/maps?q=${coords.latitude},${coords.longitude}`
+      )
     );
     callback();
   });
