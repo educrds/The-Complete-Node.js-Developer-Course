@@ -2,14 +2,14 @@ const socket = io();
 
 // Elements
 const $messageForm = document.querySelector('#message-form');
-const $messageFormInput = document.querySelector('input');
-const $messageFormButton = document.querySelector('button');
-const $sendLocationButton = document.querySelector('.send-location');
+const $messageFormInput = $messageForm.querySelector('input');
+const $messageFormButton = $messageForm.querySelector('button');
+const $sendLocationButton = document.querySelector('#send-location');
 const $messages = document.querySelector('#messages');
 
 // Templates
 const messageTemplate = document.querySelector('#message-template').innerHTML;
-const messageLocationTemplate = document.querySelector(
+const locationMessageTemplate = document.querySelector(
   '#location-message-template'
 ).innerHTML;
 
@@ -17,6 +17,7 @@ const messageLocationTemplate = document.querySelector(
 const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true });
 
 socket.on('message', (message) => {
+  console.log(message);
   const html = Mustache.render(messageTemplate, {
     message: message.text,
     createdAt: moment(message.createdAt).format('HH:mm'),
@@ -24,15 +25,14 @@ socket.on('message', (message) => {
   $messages.insertAdjacentHTML('beforeend', html);
 });
 
-socket.on('locationMessage', (url) => {
-  const html = Mustache.render(messageLocationTemplate, {
-    message: url.text,
-    createdAt: moment(url.createdAt).format('HH:mm'),
+socket.on('locationMessage', (message) => {
+  console.log(message);
+  const html = Mustache.render(locationMessageTemplate, {
+    url: message.url,
+    createdAt: moment(message.createdAt).format('h:mm a'),
   });
   $messages.insertAdjacentHTML('beforeend', html);
 });
-
-// Send message event
 
 $messageForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -41,23 +41,22 @@ $messageForm.addEventListener('submit', (e) => {
 
   const message = e.target.elements.message.value;
 
-  socket.emit('sendMessage', message, (err) => {
+  socket.emit('sendMessage', message, (error) => {
     $messageFormButton.removeAttribute('disabled');
-    $messageForm.reset();
+    $messageFormInput.value = '';
     $messageFormInput.focus();
 
-    if (err) {
-      return console.log(err);
+    if (error) {
+      return console.log(error);
     }
-    console.log('Message delivered');
+
+    console.log('Message delivered!');
   });
 });
 
-// Send location event
-
 $sendLocationButton.addEventListener('click', () => {
   if (!navigator.geolocation) {
-    return alert('Geolocation is not supported by your browser');
+    return alert('Geolocation is not supported by your browser.');
   }
 
   $sendLocationButton.setAttribute('disabled', 'disabled');
@@ -77,4 +76,9 @@ $sendLocationButton.addEventListener('click', () => {
   });
 });
 
-socket.emit('join', { username, room });
+socket.emit('join', { username, room }, (error) => {
+  if (error) {
+    alert(error);
+    location.href = '/';
+  }
+});
